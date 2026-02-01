@@ -13,13 +13,13 @@ Guidelines for working with the Clarify CRM API - includes authentication, endpo
 Install using the skills CLI:
 
 ```bash
-npx skills add patrickt010/clarify-skills
+npx skills add clarifyhq/skills
 ```
 
 Or install a specific skill:
 
 ```bash
-npx skills add patrickt010/clarify-skills --skill clarify-api
+npx skills add clarifyhq/skills --skill clarify-api
 ```
 
 ## Supported Agents
