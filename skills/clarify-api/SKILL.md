@@ -1,6 +1,8 @@
 ---
 name: clarify-api
 description: Guidelines for working with the Clarify CRM API - includes authentication, endpoints, pagination, filtering, and CRUD operations for records
+author: clarify
+version: 1.0.0
 ---
 
 # Clarify API
