@@ -110,6 +110,13 @@ filter[{field_name}][{operator}]={field_value}
 | Text, Multiline Text | `Is`, `Is not`, `Contains`, `Does not contain`, `Starts with`, `Ends with` |
 | Number, Currency | `Is`, `Greater than`, `Less than`, `Greater than or equal`, `Less than or equal` |
 | Dates | `Is`, `Is after`, `Is before`, `Is on or after`, `Is on or before` |
+
+**Date filtering gotcha:** Datetime fields (e.g., `start`, `end`, `_created_at`) store full timestamps. When filtering by date, a bare date like `2026-03-30` is interpreted as `2026-03-30T00:00:00Z` (midnight UTC). To capture all records for a full day, use a range spanning into the next day:
+```
+filter[start][Is on or after]=2026-03-30T00:00:00Z
+filter[start][Is before]=2026-03-31T00:00:00Z
+```
+Using `Is on or before=2026-03-30` will miss records later in that day.
 | Single select | `Is`, `Is not`, `One of`, `Not one of` |
 | Multi select | `Contains`, `Does not contain` |
 | Checkbox | `Is`, `Is not` |
