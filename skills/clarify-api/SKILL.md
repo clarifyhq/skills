@@ -110,6 +110,12 @@ filter[{field_name}][{operator}]={field_value}
 | Text, Multiline Text | `Is`, `Is not`, `Contains`, `Does not contain`, `Starts with`, `Ends with` |
 | Number, Currency | `Is`, `Greater than`, `Less than`, `Greater than or equal`, `Less than or equal` |
 | Dates | `Is`, `Is after`, `Is before`, `Is on or after`, `Is on or before` |
+| Single select | `Is`, `Is not`, `One of`, `Not one of` |
+| Multi select | `Contains`, `Does not contain` |
+| Checkbox | `Is`, `Is not` |
+| Location | `Contains`, `Does not contain` |
+| Record IDs | `Is`, `Is not` |
+| Collections (Email, Domains, Participants) | `Contains`, `Does not contain` |
 
 **Date filtering gotcha:** Datetime fields (e.g., `start`, `end`, `_created_at`) store full timestamps. When filtering by date, a bare date like `2026-03-30` is interpreted as `2026-03-30T00:00:00Z` (midnight UTC). To capture all records for a full day, use a range spanning into the next day:
 ```
@@ -117,12 +123,29 @@ filter[start][Is on or after]=2026-03-30T00:00:00Z
 filter[start][Is before]=2026-03-31T00:00:00Z
 ```
 Using `Is on or before=2026-03-30` will miss records later in that day.
-| Single select | `Is`, `Is not`, `One of`, `Not one of` |
-| Multi select | `Contains`, `Does not contain` |
-| Checkbox | `Is`, `Is not` |
-| Location | `Contains`, `Does not contain` |
-| Record IDs | `Is`, `Is not` |
-| Collections (Email, Domains) | `Contains`, `Does not contain` |
+
+**Collection field filtering:** Fields like `domains`, `email_addresses`, and `participants` are collection/JSONB fields. Use the `Contains` operator to search within them:
+```
+# Look up a company by domain
+GET /objects/company/resources?filter[domains][Contains]=example.com
+
+# Find meetings where someone from a specific domain attended
+GET /objects/meeting/resources?filter[participants][Contains]=@example.com
+
+# Find meetings with a specific person
+GET /objects/meeting/resources?filter[participants][Contains]=jane@example.com
+```
+You can also look up meetings by related company ID or person ID using relationship fields.
+
+**No full-text search:** The `q=` query parameter is not supported on standard endpoints. Use `filter` on specific field values instead.
+
+### Webhooks & Workflows
+
+Outbound webhooks are configured through the **Workflow builder in the Clarify UI** (trigger → action), not via the API. There is no programmatic webhook registration (CRUD) endpoint. Zapier integration is supported natively.
+
+### Transcripts
+
+Meeting transcripts are returned as JSON only via the recording artifacts endpoint. There is no plain text transcript format available through the API.
 
 ## Endpoints
 
